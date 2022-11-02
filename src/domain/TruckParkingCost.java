@@ -1,17 +1,21 @@
 package domain;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+
+import infrac.Utils;
 
 public class TruckParkingCost implements IParkingCost {
 
     @Override
-    public long calculateCost(Vehicle type, LocalDateTime input, LocalDateTime output) {
-        LocalDateTime hora=LocalDateTime.parse("2018-10-10T11:25");
-        if( hora.getHour() <= 12){
-            return 10000;
-        }else if (hora.getHour()>12 && hora.getHour()<24 )
-        return 15000;
-        
-        return 0;
+    public long calculateCost(LocalDateTime input, LocalDateTime output) {
+        double varDuracionHoras = Duration.between(input, output).toHours();
+        if (varDuracionHoras <= 12) {
+            return Utils.redondear(valorMinTruck);
+        } else if(varDuracionHoras <= 24){
+            return Utils.redondear(valorFijoTruck);
+        } else{
+            return Utils.redondear((long) (valorFijoTruck + (((varDuracionHoras - 24) / 24) * valorAdicionTruck)));
+        }
     }  
 }
